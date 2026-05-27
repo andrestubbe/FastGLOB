@@ -118,7 +118,6 @@ std::vector<std::wstring> expandBraces(const std::wstring& pattern) {
     
     for (const auto& p : parts) {
         std::wstring expanded = prefix + p + suffix;
-        // Recursively expand if there are more braces
         auto subExpanded = expandBraces(expanded);
         results.insert(results.end(), subExpanded.begin(), subExpanded.end());
     }
@@ -161,7 +160,34 @@ bool isMatch(const std::wstring& relPath, const GlobConfig& config) {
     return false;
 }
 
-// Recursive directory traversal using Win32 API
+// Check if a directory should be pruned early to optimize performance
+bool isDirectoryExcluded(const std::wstring& relPath, const GlobConfig& config) {
+    std::wstring normPath = normalizePath(relPath);
+    
+    // Always prune standard system/IDE folders by default for safety
+    if (normPath == L".git" || normPath.find(L"/.git") != std::wstring::npos ||
+        normPath == L".idea" || normPath.find(L"/.idea") != std::wstring::npos) {
+        return true;
+    }
+
+    for (const auto& pat : config.excludePatterns) {
+        if (matchPatternPart(pat.c_str(), normPath.c_str())) {
+            return true;
+        }
+        
+        // Check if directory matches a prefix of pattern, e.g. "target/**" or "**/target/**"
+        std::wstring cleanPat = pat;
+        if (cleanPat.size() > 3 && cleanPat.substr(cleanPat.size() - 3) == L"/**") {
+            cleanPat = cleanPat.substr(0, cleanPat.size() - 3);
+        }
+        if (matchPatternPart(cleanPat.c_str(), normPath.c_str())) {
+            return true;
+        }
+    }
+    return false;
+}
+
+// Recursive directory traversal using Win32 API with directory pruning
 void traverseDirectory(const std::wstring& baseDir, const std::wstring& currentSubDir, const GlobConfig& config, std::vector<std::wstring>& matches) {
     std::wstring searchPath = baseDir;
     if (!currentSubDir.empty()) {
@@ -185,8 +211,10 @@ void traverseDirectory(const std::wstring& baseDir, const std::wstring& currentS
         std::wstring relativePath = currentSubDir.empty() ? name : currentSubDir + L"\\" + name;
         
         if (findData.dwFileAttributes & FILE_ATTRIBUTE_DIRECTORY) {
-            // Recurse into directories
-            traverseDirectory(baseDir, relativePath, config, matches);
+            // Recurse into directory if not excluded
+            if (!isDirectoryExcluded(relativePath, config)) {
+                traverseDirectory(baseDir, relativePath, config, matches);
+            }
         } else {
             // Match file
             if (isMatch(relativePath, config)) {
@@ -206,7 +234,6 @@ JNIEXPORT jobjectArray JNICALL Java_fastglob_FastGLOB_glob(JNIEnv* env, jclass c
     std::wstring wBaseDir = jstringToWString(env, baseDir);
     std::wstring wPattern = jstringToWString(env, pattern);
     
-    // Parse pattern
     GlobConfig config;
     
     // Expand braces
@@ -221,6 +248,13 @@ JNIEXPORT jobjectArray JNICALL Java_fastglob_FastGLOB_glob(JNIEnv* env, jclass c
         } else {
             config.includePatterns.push_back(normPat);
         }
+    }
+    
+    // Always default to exclude .git, build, out, target unless explicitly requested
+    if (config.excludePatterns.empty()) {
+        config.excludePatterns.push_back(L"**/build/**");
+        config.excludePatterns.push_back(L"**/target/**");
+        config.excludePatterns.push_back(L"**/out/**");
     }
     
     std::vector<std::wstring> matches;
