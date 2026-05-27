@@ -11,5 +11,5 @@ if %ERRORLEVEL% NEQ 0 (
 echo.
 echo Running Benchmark...
 call mvn -q -f examples/Benchmark/pom.xml compile
-call java -cp "target\fastglob-1.0.0.jar;examples\Benchmark\target\classes" fastglob.Benchmark
+call java -cp "target\fastglob-0.1.0.jar;examples\Benchmark\target\classes" fastglob.Benchmark
 pause
