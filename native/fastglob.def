@@ -1,0 +1,6 @@
+﻿LIBRARY fastglob
+EXPORTS
+    ; JNI Method Exports
+    ; Format: Java_packagename_Classname_methodName
+    
+    Java_fastglob_FastGLOB_doSomethingNative
