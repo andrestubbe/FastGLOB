@@ -79,10 +79,10 @@ FastGLOB is significantly faster than standard Java Alternatives, especially on 
 
 | Method | Description | Path |
 |--------|-------------|------|
-| `static String[] glob(String baseDir, String pattern)` | Traverses the base directory and returns matched file paths relative to it. Supports brace expansion, negation patterns, and native directory pruning. | [Reference →](REFERENCE.md#glob) |
+| `static String[] glob(String baseDir, String pattern)` | Traverses the base directory and returns matched file paths relative to it. Supports brace expansion, negation patterns, and native directory pruning. | [Reference →](docs/REFERENCE.md#glob) |
 
 > [!TIP]
-> See **[philosophie.md](philosophie.md)** for our Native-First architectural standards and JNI guidelines.
+> See **[philosophie.md](docs/philosophie.md)** for our Native-First architectural standards and JNI guidelines.
 
 ---
 
@@ -155,10 +155,10 @@ See the `examples/` directory for technical implementations and performance race
 ---
 
 ## Documentation
-*   **[REFERENCE.md](REFERENCE.md)**: Full technical specification and JNI contracts.
+*   **[REFERENCE.md](docs/REFERENCE.md)**: Full technical specification and JNI contracts.
 *   **[PHILOSOPHIE.md](PHILOSOPHIE.md)**: The "Native-First" philosophy.
-*   **[CHANGELOG.md](CHANGELOG.md)**: Project history.
-*   **[ROADMAP.md](ROADMAP.md)**: Future development and milestones.
+*   **[CHANGELOG.md](docs/CHANGELOG.md)**: Project history.
+*   **[ROADMAP.md](docs/ROADMAP.md)**: Future development and milestones.
 
 ---
 
