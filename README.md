@@ -1,4 +1,4 @@
-# FastGLOB — Native Windows Glob Pattern Matching for Java
+# FastGLOB 0.1.0 [ALPHA-2026-05-27] — Native Windows Glob Pattern Matching for Java
 
 **High-performance native Windows file pattern matching (globbing) and directory traversal library for Java.**
 
