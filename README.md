@@ -10,8 +10,11 @@
 
 **FastGLOB** is the high-performance globbing substrate of the FastJava ecosystem. It provides the hand-tuned Win32 native primitives required for lightning-fast directory traversal and pattern matching.
 
+---
+
+## Quick Start
+
 ```java
-// Quick Start — Example
 import fastglob.FastGLOB;
 
 public class Demo {
@@ -24,8 +27,6 @@ public class Demo {
     }
 }
 ```
-
-[![FastGLOB Showcase](docs/screenshot.png)](https://www.youtube.com/watch?v=HpCVFcFTWpg)
 
 ---
 
