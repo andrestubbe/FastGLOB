@@ -57,6 +57,13 @@ FastGLOB is not just faster; it is semantically superior and developer-friendly:
 - **Negation Support:** Exclude paths directly in the pattern (e.g., `!**/target/**`).
 - **Consistent Double-Star (`**`):** Flawless recursive matching, including root-level files.
 
+| Feature | java.nio.file.PathMatcher | Apache Commons IO | FastGLOB |
+|:---|:---|:---|:---|
+| **Matching Engine** | Compiles to standard Java `Pattern`| Pure Java string comparisons | **Hyper-optimized native C++ wildcard** |
+| **Directory Traversal** | Recursive `Files.walk` heap churn | Java `File.listFiles()` heap bloat| **Native `NtQueryDirectoryFile` win32** |
+| **Heap / GC Overhead** | Millions of temporary Path objects| Heavy File/String allocations | **0 MB (Matches only enter JVM)** |
+| **Modern Semantics** | Inconsistent `**` root match | No brace expansion / negation | **Full `.gitignore`, braces & negation** |
+
 ---
 
 ## Key Features
